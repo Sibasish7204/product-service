@@ -1,0 +1,19 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/ProductCatalog/.vs
+/ProductCatalog/ProductCatalog/bin/Debug/net8.0
+/ProductCatalog/ProductCatalog/obj/Container
+/ProductCatalog/ProductCatalog/obj/Debug/net8.0
+/ProductCatalog/ProductCatalog/obj
+/ProductCatalog/ProductCatalog.Core/bin/Debug/net8.0
+/ProductCatalog/ProductCatalog.Core/obj/Debug/net8.0
+/ProductCatalog/ProductCatalog.Core/obj
+/ProductCatalog/ProductCatalog.Services/bin/Debug/net8.0
+/ProductCatalog/ProductCatalog.Services/obj/Debug/net8.0
+/ProductCatalog/ProductCatalog.Services/obj
+/ProductCatalog/ProductCatalog.Data/bin/Debug/net8.0
+/ProductCatalog/ProductCatalog.Data/obj/Debug/net8.0
+/ProductCatalog/ProductCatalog.Data/obj
+/.vs
