@@ -31,6 +31,16 @@ namespace ProductCatalog.Data.Implementations
             public async Task AddAsync(T entity) => await _entities.AddAsync(entity);
             public void Remove(T entity) => _entities.Remove(entity);
             public void Update(T entity) => _entities.Update(entity);
+            public async Task<List<T>> FindAllIncludingAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
+            {
+                IQueryable<T> query = _entities.Where(predicate);
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+                return await query.ToListAsync();
+            }
+
         }
     }
 

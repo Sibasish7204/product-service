@@ -1,3 +1,5 @@
+using Mapster;
+using ProductCatalog.Mapper;
 using ProductCatalog.Service_Dependencies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +11,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddServices(builder.Configuration);
+builder.Services.AddMapster();
+TypeAdapterConfig.GlobalSettings.Scan(typeof(MapRegister).Assembly);
 
 
 var app = builder.Build();

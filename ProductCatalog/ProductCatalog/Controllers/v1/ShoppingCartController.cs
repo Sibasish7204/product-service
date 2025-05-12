@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Mapster;
+using MapsterMapper;
+using Microsoft.AspNetCore.Mvc;
+using ProductCatalog.Core.DTO;
 using ProductCatalog.Data.DbModels;
 using ProductCatalog.Data.Interfaces;
+using ProductCatalog.Services.Interfaces;
 
 namespace ProductCatalog.Controllers.v1
 {
@@ -8,28 +12,29 @@ namespace ProductCatalog.Controllers.v1
     [Route("api/[controller]")]
     public class ShoppingCartController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IShoppingCartService _shoppingCart;
+        private readonly IMapper _mapper;
 
-        public ShoppingCartController(IUnitOfWork unitOfWork)
+        public ShoppingCartController(IShoppingCartService shoppingCart, IMapper mapper)
         {
-            _unitOfWork = unitOfWork;
+            _shoppingCart = shoppingCart;
+            _mapper = mapper;
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddToCart([FromBody] ShoppingCart cart)
+        public async Task<IActionResult> AddToCart([FromBody] DtoShoppingCartCreate cart)
         {
-            await _unitOfWork.ShoppingCarts.AddAsync(cart);
-            await _unitOfWork.CompleteAsync();
+            var shoppingCart = cart.Adapt<ShoppingCart>();
+            _shoppingCart.AddToCart(shoppingCart);
             return Ok(cart);
         }
 
         [HttpGet("{customerId}")]
         public async Task<IActionResult> GetCartByCustomer(int customerId)
         {
-            var cartItems = await _unitOfWork.ShoppingCarts
-                .FindAsync(c => c.CustomerId == customerId);
-
-            return Ok(cartItems);
+           var cartItems = await _shoppingCart.GetByCustomerId(customerId);
+            var dtoCarts = _mapper.Map<List<DtoShoppingCart>>(cartItems);
+            return Ok(dtoCarts);
         }
     }
 

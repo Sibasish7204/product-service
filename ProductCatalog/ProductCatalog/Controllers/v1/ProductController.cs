@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Mapster;
+using MapsterMapper;
+using Microsoft.AspNetCore.Mvc;
+using ProductCatalog.Core.DTO;
 using ProductCatalog.Data.DbModels;
 using ProductCatalog.Data.Interfaces;
+using ProductCatalog.Services.Interfaces;
 
 namespace ProductCatalog.Controllers.v1
 {
@@ -8,59 +12,65 @@ namespace ProductCatalog.Controllers.v1
     [Route("api/[controller]")]
     public class ProductController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IProductService _productService;
+        private readonly IMapper _mapper;
 
-        public ProductController(IUnitOfWork unitOfWork)
+        public ProductController(IMapper mapper, IProductService productService)
         {
-            _unitOfWork = unitOfWork;
+            _productService = productService;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var products = await _unitOfWork.Products.GetAllAsync();
-            return Ok(products);
+            var products = await _productService.GetAllAsync();
+            if (products == null) return null;
+            var dtoProducts = _mapper.Map<List<DtoProduct>>(products);
+
+            return Ok(dtoProducts);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var product = await _unitOfWork.Products.GetByIdAsync(id);
+            var product = await _productService.GetByIdAsync(id);
             if (product == null) return NotFound();
-            return Ok(product);
+            var dtoProduct = _mapper.Map<DtoProduct>(product);
+            return Ok(dtoProduct);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Product product)
+        public async Task<IActionResult> Create(DtoProduct dtoProduct)
         {
-            await _unitOfWork.Products.AddAsync(product);
-            await _unitOfWork.CompleteAsync();
+            var product = dtoProduct.Adapt<Product>();
+            await _productService.Create(product);
             return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, Product updatedProduct)
-        {
-            var product = await _unitOfWork.Products.GetByIdAsync(id);
-            if (product == null) return NotFound();
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> Update(int id, Product updatedProduct)
+        //{
+        //    var product = await _unitOfWork.Products.GetByIdAsync(id);
+        //    if (product == null) return NotFound();
 
-            product.Name = updatedProduct.Name;
-            product.Price = updatedProduct.Price;
+        //    product.Name = updatedProduct.Name;
+        //    product.Price = updatedProduct.Price;
 
-            await _unitOfWork.CompleteAsync();
-            return NoContent();
-        }
+        //    await _unitOfWork.CompleteAsync();
+        //    return NoContent();
+        //}
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var product = await _unitOfWork.Products.GetByIdAsync(id);
-            if (product == null) return NotFound();
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> Delete(int id)
+        //{
+        //    var product = await _unitOfWork.Products.GetByIdAsync(id);
+        //    if (product == null) return NotFound();
 
-            _unitOfWork.Products.Remove(product);
-            await _unitOfWork.CompleteAsync();
-            return NoContent();
-        }
+        //    _unitOfWork.Products.Remove(product);
+        //    await _unitOfWork.CompleteAsync();
+        //    return NoContent();
+        //}
     }
 
 }

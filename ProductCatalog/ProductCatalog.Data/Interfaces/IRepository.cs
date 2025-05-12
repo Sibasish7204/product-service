@@ -15,5 +15,7 @@ namespace ProductCatalog.Data.Interfaces
         Task AddAsync(T entity);
         void Remove(T entity);
         void Update(T entity);
+        Task<List<T>> FindAllIncludingAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
+
     }
 }
