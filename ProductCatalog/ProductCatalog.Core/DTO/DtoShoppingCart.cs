@@ -4,17 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProductCatalog.Data.DbModels
+namespace ProductCatalog.Core.DTO
 {
-    public class ShoppingCart
+    public class DtoShoppingCart
     {
         public int Id { get; set; }
 
         public int CustomerId { get; set; }
-        public Customer? Customer { get; set; }
+        public string CustomerName { get; set; } = null!;
 
         public int ProductId { get; set; }
-        public Product? Product { get; set; } 
+        public string ProductName { get; set; } = null!;
 
         public int Quantity { get; set; }
     }

@@ -12,6 +12,7 @@ namespace ProductCatalog.Data.Interfaces
         IRepository<Customer> Customers { get; }
         IRepository<Product> Products { get; }
         IRepository<ShoppingCart> ShoppingCarts { get; }
+        IRepository<User> Users { get; }
 
         Task<int> CompleteAsync();
     }
