@@ -20,6 +20,8 @@ namespace ProductCatalog.Data.Implementations
 
         public IRepository<User> Users { get; }
 
+        public IUserRepository UserRepo { get; }
+
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
@@ -27,6 +29,7 @@ namespace ProductCatalog.Data.Implementations
             Customers = new Repository<Customer>(_context);
             ShoppingCarts = new Repository<ShoppingCart>(_context);
             Users = new Repository<User>(_context);
+            UserRepo = new UserRepository(_context);
         }
 
         public async Task<int> CompleteAsync()
