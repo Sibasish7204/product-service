@@ -5,13 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProductCatalog.Services.Interfaces
+namespace ProductCatalog.Data.Interfaces
 {
-    public interface IUserService
+    public interface IUserRepository
     {
-        public Task Register(User user);
-        public Task Login(User user);
-
         public Task<User> GetUserByEmail(string email);
     }
 }

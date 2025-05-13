@@ -16,6 +16,13 @@ namespace ProductCatalog.Services.Services
         {
             _unitOfWork = unitOfWork;
         }
+
+        public async Task<User> GetUserByEmail(string email)
+        {
+            var user = await _unitOfWork.UserRepo.GetUserByEmail(email);
+            return user;
+        }
+
         public Task Login(User user)
         {
             throw new NotImplementedException();
