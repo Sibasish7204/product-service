@@ -1,5 +1,6 @@
 using Mapster;
 using ProductCatalog.Mapper;
+using ProductCatalog.Middlewares;
 using ProductCatalog.Service_Dependencies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +27,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
+app.UseMiddleware<AuthMiddleware>();
 
 app.UseAuthorization();
 

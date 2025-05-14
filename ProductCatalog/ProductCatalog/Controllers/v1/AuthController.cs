@@ -23,6 +23,7 @@ namespace ProductCatalog.Controllers.v1
             _userService = userService;
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] DtoUserLogIn user)
         {
