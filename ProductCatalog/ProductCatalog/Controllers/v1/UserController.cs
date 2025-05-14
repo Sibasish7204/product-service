@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using MapsterMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductCatalog.Core.DTO;
 using ProductCatalog.Data.DbModels;
@@ -18,6 +19,8 @@ namespace ProductCatalog.Controllers.v1
             _mapper = mapper;
             _userService = userService;
         }
+
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create(DtoUserSignUp userSignUp)
         {

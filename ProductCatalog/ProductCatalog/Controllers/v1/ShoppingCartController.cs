@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using MapsterMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductCatalog.Core.DTO;
 using ProductCatalog.Data.DbModels;
@@ -21,6 +22,7 @@ namespace ProductCatalog.Controllers.v1
             _mapper = mapper;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddToCart([FromBody] DtoShoppingCartCreate cart)
         {
@@ -29,6 +31,7 @@ namespace ProductCatalog.Controllers.v1
             return Ok(cart);
         }
 
+        [Authorize]
         [HttpGet("{customerId}")]
         public async Task<IActionResult> GetCartByCustomer(int customerId)
         {
