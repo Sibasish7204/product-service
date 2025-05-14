@@ -2,7 +2,9 @@
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ProductCatalog.Core.DTO;
+using ProductCatalog.Core.Models;
 using ProductCatalog.Data.DbModels;
 using ProductCatalog.Data.Interfaces;
 using ProductCatalog.Services.Interfaces;
@@ -27,27 +29,38 @@ namespace ProductCatalog.Controllers.v1
         public async Task<IActionResult> GetAll()
         {
             var products = await _productService.GetAllAsync();
-            if (products == null) return null;
+            if (products == null)
+            {
+                return NotFound(JsonConvert.SerializeObject(GenericResponseModel<Product>.FailureResponse(
+                    new List<ErrorModel> { ErrorLibrary.NotFound("Product") })));
+            }
             var dtoProducts = _mapper.Map<List<DtoProduct>>(products);
 
-            return Ok(dtoProducts);
+            return Ok(JsonConvert.SerializeObject(GenericResponseModel<List<DtoProduct>>.SuccessResponse(dtoProducts)));
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             var product = await _productService.GetByIdAsync(id);
-            if (product == null) return NotFound();
+            if (product == null) { 
+                
+                return NotFound(JsonConvert.SerializeObject(GenericResponseModel<Product>.FailureResponse(
+                    new List<ErrorModel> { ErrorLibrary.NotFound("Product")}))); 
+            }
+
             var dtoProduct = _mapper.Map<DtoProduct>(product);
-            return Ok(dtoProduct);
+            return Ok(JsonConvert.SerializeObject(GenericResponseModel<DtoProduct>.SuccessResponse(dtoProduct)));
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create(DtoProduct dtoProduct)
         {
-            var product = dtoProduct.Adapt<Product>();
-            await _productService.Create(product);
-            return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
+                var product = dtoProduct.Adapt<Product>();
+                await _productService.Create(product);
+                return Ok(JsonConvert.SerializeObject(GenericResponseModel<Product>.SuccessResponse(product)));            
         }
 
         //[HttpPut("{id}")]
